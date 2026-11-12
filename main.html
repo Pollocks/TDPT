@@ -1,0 +1,84 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sudden perturbation of a quantum well</title><style>
+:root{font-family:system-ui,-apple-system,Arial,sans-serif;color:#17263b;background:#f6f8fc}*{box-sizing:border-box}body{margin:0;padding:18px}.wrap{max-width:1130px;margin:auto}h1{font-size:24px;margin:0 0 5px}.sub{color:#54647b;margin:0 0 14px;font-size:14px}.panel{background:white;border:1px solid #dce3ed;border-radius:12px;padding:15px;margin:12px 0}.stages{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stage{border:1px solid #d6dfeb;padding:9px;border-radius:8px;text-align:center;color:#69788b;font-size:13px}.stage.active{background:#e7f0ff;border-color:#4177c7;color:#174b9a;font-weight:700}.controls{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.btn{border:1px solid #b6c5d9;background:white;color:#203c62;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer;font-size:14px}.btn.primary{background:#1859a5;color:white;border-color:#1859a5}.btn.switch{background:#166a72;color:white;border-color:#166a72}.btn:disabled{opacity:.4;cursor:not-allowed}.clock{margin-left:auto;font-variant-numeric:tabular-nums;font-size:14px}.speed{display:flex;align-items:center;gap:7px;font-size:13px}input[type=range]{width:115px}.plots{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:12px}.chartTitle{font-size:17px;font-weight:700;margin:0 0 7px}canvas{width:100%;max-width:100%;height:420px;display:block;touch-action:none}.plots>.panel{min-width:0;overflow:hidden}.plotNote{font-size:12px;color:#64748b;margin:6px 0 0}.readouts{display:flex;gap:12px;flex-wrap:wrap;margin-top:9px}.readout{background:#f0f5fc;border-radius:8px;padding:10px 13px;flex:1;min-width:170px}.readout strong{font-size:19px;display:block;margin-top:4px;font-variant-numeric:tabular-nums}.info{font-size:14px;line-height:1.5;color:#40536d}details summary{cursor:pointer;font-weight:650}.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:#526277;margin-top:8px}.key{display:inline-block;width:17px;height:3px;vertical-align:middle;margin-right:4px}.status{font-size:13px;color:#526277;margin:10px 0 0}@media(max-width:760px){.plots{grid-template-columns:1fr}.clock{margin-left:0}.stages{gap:4px}.stage{padding:7px 3px;font-size:11px}body{padding:9px}}
+</style></head><body><main class="wrap"><h1>Quantum well: a sudden, temporary perturbation</h1><p class="sub">Initial state: first excited state φ₂ of an infinite square well. The perturbation is a symmetric V-shaped potential, zero at the center and +V₀ at the walls.</p>
+<div class="stages"><div id="s0" class="stage active">I · Before perturbation<br>H = H₀</div><div id="s1" class="stage">II · Perturbation on<br>H = H₀ + V′</div><div id="s2" class="stage">III · Perturbation removed<br>H = H₀</div></div>
+<section class="panel"><div class="controls"><button id="play" class="btn primary">Resume</button><button id="add" class="btn switch">Add perturbation</button><button id="remove" class="btn switch" disabled>Remove perturbation</button><button id="reset" class="btn">Reset</button><label class="speed">Speed <input id="speed" type="range" min="0.1" max="2" step="0.05" value="1"><span id="speedTxt">1.00×</span></label><span class="clock" id="clock">τ = 0.000</span></div><p class="status" id="status">Paused in the initial eigenstate. Add the perturbation whenever you wish.</p></section>
+<div class="plots"><section class="panel"><h2 class="chartTitle">Position probability density and energy levels</h2><canvas id="spatial" width="600" height="420" aria-label="Probability density in infinite well and energy levels"></canvas><div class="legend"><span><i class="key" style="background:#1d66bc"></i>|ψ(x,τ)|²</span><span><i class="key" style="background:#d48126"></i>V′(x)</span><span><i class="key" style="background:#8c9aaa"></i>Energy levels (solid faint guides: unperturbed; dash-dot: perturbed)</span></div><p class="plotNote">Horizontal axis x/a. Right-hand energy scale is in units of E₁⁽⁰⁾; probability density uses the left scale. The density is continuous when the potential switches.</p></section><section class="panel"><h2 class="chartTitle">Energy measurement probabilities</h2><canvas id="hist" width="420" height="420" aria-label="Energy probability histogram"></canvas><p class="plotNote">Bars refer to eigenstates of the <em>current</em> Hamiltonian. Their heights remain constant between switches. Odd n remain forbidden by parity. Very small probabilities, including n=6, may be invisible on this linear scale.</p><div class="readouts"><div class="readout"><span id="label2">P(E₂⁽⁰⁾)</span><strong id="p2">100.0%</strong></div><div class="readout"><span id="label4">P(E₄⁽⁰⁾)</span><strong id="p4">0.0%</strong></div></div><p class="plotNote" id="readoutNote">Probabilities for energy measurements of the current Hamiltonian; constant until the Hamiltonian changes.</p></section></div>
+<section class="panel info"><details><summary>Info: what should students notice?</summary><p>At each sudden change in the Hamiltonian, the wavefunction ψ(x,τ) does not jump. But the energy eigenstates and eigenvalues change, so the energy probabilities can jump. Between switches, the probability of measuring each energy of the current Hamiltonian is constant, even as |ψ|² evolves.</p><p>After removal, the original infinite-well spectrum returns, but the wavefunction is generally a superposition rather than the original φ₂. The final energy probabilities depend on how long the perturbation was on. Reflection symmetry about the midpoint is preserved, so only even-n states of the original well are populated.</p><p>Scaled units: a=1, E₁⁽⁰⁾=1, τ=E₁⁽⁰⁾t/ℏ. The perturbation is V′(x)=2V₀|x/a−1/2| with V₀=7E₁⁽⁰⁾. We diagonalize the Hamiltonian numerically in a truncated 24-state infinite-well basis; plotted energies are its numerical eigenvalues. This is an exact unitary evolution within that finite basis, not a first-order perturbation-theory approximation.</p></details></section></main>
+<script>
+'use strict';
+const N=24, M=420, V0=7, PI=Math.PI;const sq2=Math.sqrt(2);const xs=Array.from({length:M+1},(_,i)=>i/M);const phi=(n,x)=>sq2*Math.sin(n*PI*x);const unE=Array.from({length:N},(_,i)=>(i+1)**2);
+// Symmetric perturbation matrix, Simpson quadrature.
+const q=1200, mat=Array.from({length:N},()=>new Float64Array(N));for(let k=1;k<q;k++){const x=k/q,w=(k%2?4:2)/3/q,v=2*V0*Math.abs(x-.5);const f=Array.from({length:N},(_,i)=>phi(i+1,x));for(let i=0;i<N;i++)for(let j=0;j<=i;j++)mat[i][j]+=w*v*f[i]*f[j];}for(let i=0;i<N;i++){mat[i][i]+=unE[i];for(let j=0;j<i;j++)mat[j][i]=mat[i][j];}
+function jacobi(A){const a=A.map(r=>Float64Array.from(r)),v=Array.from({length:N},(_,i)=>Float64Array.from({length:N},(_,j)=>+(i===j)));for(let iter=0;iter<20*N*N;iter++){let p=0,r=1,max=0;for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){const z=Math.abs(a[i][j]);if(z>max){max=z;p=i;r=j;}}if(max<1e-10)break;const ang=.5*Math.atan2(2*a[p][r],a[r][r]-a[p][p]);const c=Math.cos(ang),s=Math.sin(ang);const app=a[p][p],arr=a[r][r],apr=a[p][r];a[p][p]=c*c*app-2*s*c*apr+s*s*arr;a[r][r]=s*s*app+2*s*c*apr+c*c*arr;a[p][r]=a[r][p]=0;for(let k=0;k<N;k++){if(k!==p&&k!==r){const kp=a[k][p],kr=a[k][r];a[k][p]=a[p][k]=c*kp-s*kr;a[k][r]=a[r][k]=s*kp+c*kr;}const vp=v[k][p],vr=v[k][r];v[k][p]=c*vp-s*vr;v[k][r]=s*vp+c*vr;}}
+const idx=Array.from({length:N},(_,i)=>i).sort((i,j)=>a[i][i]-a[j][j]);return {E:idx.map(i=>a[i][i]),U:Array.from({length:N},(_,row)=>idx.map(i=>v[row][i]))};}
+const pert=jacobi(mat);const state={stage:0,playing:false,t:0,onTime:null,T:null,baseRe:new Float64Array(N),baseIm:new Float64Array(N),epoch:0};state.baseRe[1]=1;
+const $=id=>document.getElementById(id);const canvas=$('spatial'),hist=$('hist');let last=0;
+function evolveAt(t){const dt=t-state.epoch, e=state.stage===1?pert.E:unE;const re=new Float64Array(N),im=new Float64Array(N);for(let i=0;i<N;i++){const co=Math.cos(e[i]*dt),si=Math.sin(e[i]*dt);re[i]=state.baseRe[i]*co+state.baseIm[i]*si;im[i]=state.baseIm[i]*co-state.baseRe[i]*si;}return {re,im};}
+function toOriginal(z){if(state.stage!==1)return z;const re=new Float64Array(N),im=new Float64Array(N);for(let i=0;i<N;i++)for(let j=0;j<N;j++){re[i]+=pert.U[i][j]*z.re[j];im[i]+=pert.U[i][j]*z.im[j];}return {re,im};}
+function toPert(z){const re=new Float64Array(N),im=new Float64Array(N);for(let j=0;j<N;j++)for(let i=0;i<N;i++){re[j]+=pert.U[i][j]*z.re[i];im[j]+=pert.U[i][j]*z.im[i];}return {re,im};}
+function setStage(next){const z=toOriginal(evolveAt(state.t));const nz=next===1?toPert(z):z;state.stage=next;state.baseRe=nz.re;state.baseIm=nz.im;state.epoch=state.t;if(next===1)state.onTime=state.t;else state.T=state.t-state.onTime;update();}
+function reset(){state.stage=0;state.playing=false;state.t=0;state.epoch=0;state.T=null;state.onTime=null;state.baseRe=new Float64Array(N);state.baseIm=new Float64Array(N);state.baseRe[1]=1;last=0;update();}
+$('play').onclick=()=>{state.playing=!state.playing;last=0;update();};$('add').onclick=()=>{if(state.stage===0)setStage(1);};$('remove').onclick=()=>{if(state.stage===1)setStage(2);};$('reset').onclick=reset;$('speed').oninput=()=>{$('speedTxt').textContent=(+$('speed').value).toFixed(2)+'×';};
+function fit(c){
+// Crucial: never measure the canvas intrinsic width as the source of its next size.
+// Otherwise CSS grid intrinsic sizing can grow on every animation frame.
+const w=Math.max(200,Math.floor(c.parentElement.clientWidth-30));
+const h=420,d=Math.min(2,window.devicePixelRatio||1);
+const pw=Math.round(w*d),ph=Math.round(h*d);
+if(c.width!==pw)c.width=pw;
+if(c.height!==ph)c.height=ph;
+const g=c.getContext('2d');g.setTransform(d,0,0,d,0,0);return {g,w,h};}
+function line(g,x1,y1,x2,y2,color='#cbd5e1',width=1,dash=[]){g.beginPath();g.strokeStyle=color;g.lineWidth=width;g.setLineDash(dash);g.moveTo(x1,y1);g.lineTo(x2,y2);g.stroke();g.setLineDash([]);}
+function text(g,s,x,y,size=13,color='#526277',align='left',bold=false){g.fillStyle=color;g.font=`${bold?'700 ':''}${size}px system-ui,Arial`;g.textAlign=align;g.fillText(s,x,y);}
+function plotSpatial(z){
+ const {g,w,h}=fit(canvas),L=53,R=w-63,top=27,bot=h-49,W=R-L,H=bot-top;
+ const orig=toOriginal(z);
+ const dens=xs.map(x=>{let re=0,im=0;for(let n=0;n<N;n++){const f=phi(n+1,x);re+=orig.re[n]*f;im+=orig.im[n]*f;}return re*re+im*im;});
+ const max=4.0, emax=19.5;
+ g.clearRect(0,0,w,h);
+ // Only axes and their ticks for the probability density: no horizontal gridlines.
+ line(g,L,top,L,bot,'#8c99aa',1.1);line(g,L,bot,R,bot,'#8c99aa',1.1);
+ for(let j=0;j<=4;j++){
+   const y=bot-j*H/4;
+   line(g,L-4,y,L,y,'#8c99aa');
+   text(g,(j*max/4).toFixed(1),L-8,y+4,12,'#64748b','right');
+ }
+ for(let j=0;j<=4;j++){
+   const x=L+j*W/4;
+   line(g,x,bot,x,bot+4,'#8c99aa');
+   text(g,(j/4).toFixed(2).replace(/0$/,''),x,bot+19,12,'#64748b','center');
+ }
+ text(g,'x / a',L+W/2,h-9,15,'#23344d','center',true);
+ text(g,'|ψ|²',L,16,17,'#1d66bc','left',true);
+ // The original spectrum is a permanent right-hand energy scale.
+ // These faint lines are the ONLY horizontal reference lines in the plot.
+ line(g,R+12,top,R+12,bot,'#8c99aa',1);
+ text(g,'E/E₁⁽⁰⁾',R+12,16,12,'#58677b','center',true);
+ for(let j=0;j<4;j++){
+   const E=unE[j], y=bot-E/emax*H;
+   line(g,L,y,R+16,y,'#cbd5e1',1);
+   text(g,String(E),R+23,y+4,12,'#4b5b70','left',true);
+ }
+ // During the perturbation, perturbed eigenvalues appear in dash-dot style.
+ if(state.stage===1){
+   for(let j=0;j<4;j++){
+     const E=pert.E[j];if(E>emax)continue;
+     const y=bot-E/emax*H;
+     line(g,L,y,R,y,j===1?'#61758f':'#8796a9',j===1?2:1.6,[9,4,2,4]);
+     text(g,'E'+(j+1)+'′',R-5,y-5,12,'#566b85','right',true);
+   }
+   g.beginPath();g.strokeStyle='#d48126';g.lineWidth=2.5;
+   g.moveTo(L,bot-.32*H);g.lineTo((L+R)/2,bot);g.lineTo(R,bot-.32*H);g.stroke();
+ }
+ g.beginPath();g.strokeStyle='#1d66bc';g.lineWidth=2.7;
+ for(let i=0;i<=M;i++){
+   const x=L+W*i/M,y=bot-dens[i]/max*H;
+   if(i===0)g.moveTo(x,y);else g.lineTo(x,y);
+ }
+ g.stroke();
+}
+function plotHist(z){const {g,w,h}=fit(hist),L=48,R=w-12,top=29,bot=h-62,W=R-L,H=bot-top;const count=8,probs=Array.from({length:count},(_,i)=>z.re[i]**2+z.im[i]**2);g.clearRect(0,0,w,h);for(let j=0;j<=4;j++){const y=bot-j*H/4;line(g,L,y,R,y);text(g,(j/4).toFixed(2).replace(/0$/,''),L-7,y+4,12,'#64748b','right');}const slot=W/count,bw=Math.min(31,slot*.62);for(let i=0;i<count;i++){const x=L+slot*(i+.5),p=probs[i];g.fillStyle='#1d66bc';g.fillRect(x-bw/2,bot-p*H,bw,Math.max(0,p*H));text(g,String(i+1),x,bot+19,12,'#34465d','center');const en=(state.stage===1?pert.E:unE)[i];text(g,en<100?en.toFixed(state.stage===1?1:0):Math.round(en).toString(),x,bot+36,10,'#738197','center');}text(g,state.stage===1?'n (Eₙ′ / E₁⁽⁰⁾ below)':'n (Eₙ⁽⁰⁾ / E₁⁽⁰⁾ below)',L+W/2,h-7,12,'#435570','center');text(g,'P(n)',L,16,17,'#1d66bc','left',true);}
+function update(){for(let i=0;i<3;i++)$('s'+i).classList.toggle('active',i===state.stage);$('add').disabled=state.stage!==0;$('remove').disabled=state.stage!==1;$('play').textContent=state.playing?'Pause':'Resume';$('clock').textContent=`τ = ${state.t.toFixed(3)}`;const msg=state.stage===0?'Initial eigenstate: energy E₂⁽⁰⁾ = 4E₁⁽⁰⁾.':state.stage===1?`Perturbation ON. Elapsed duration: ${(state.t-state.onTime).toFixed(3)} (ℏ/E₁).`:`Perturbation OFF. Duration T = ${state.T.toFixed(3)} (ℏ/E₁).`; $('status').textContent=(state.playing?'Running. ':'Paused. ')+msg;const z=evolveAt(state.t);plotSpatial(z);plotHist(z);$('label2').textContent=state.stage===1?'P(E₂′)':'P(E₂⁽⁰⁾)';$('label4').textContent=state.stage===1?'P(E₄′)':'P(E₄⁽⁰⁾)';$('p2').textContent=(100*(z.re[1]**2+z.im[1]**2)).toFixed(4)+'%';$('p4').textContent=(100*(z.re[3]**2+z.im[3]**2)).toFixed(4)+'%';$('readoutNote').textContent=state.stage===1?'Perturbed energy probabilities remain constant while H′ is on.':state.stage===2?'Final unperturbed energy probabilities remain constant after removal.':'Initial unperturbed energy probabilities.';}
+function frame(ms){if(!last)last=ms;const dt=Math.min(.06,(ms-last)/1000);last=ms;if(state.playing){state.t+=dt*0.7*(+$('speed').value);update();}requestAnimationFrame(frame);}window.addEventListener('resize',update);update();requestAnimationFrame(frame);
+</script></body></html>
